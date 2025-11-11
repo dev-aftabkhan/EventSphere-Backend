@@ -13,7 +13,7 @@ const ticketRoutes  = require('./ticketRoutes');
 const router = express.Router();
 
 // auth routes
-router.use("/auth", apiKeyMiddleware(4) ,authRoutes);
+router.use("/auth", authRoutes);
 
 // admin routes
 router.use("/image", apiKeyMiddleware(1), imageRoutes);
