@@ -21,7 +21,7 @@ const registerUser = async (username, personalEmail, password) => {
 
     // Execute the stored procedure
     const [rows] = await pool.query(
-        "INSERT INTO organization_member (username, password, personal_email, role, created_at) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO organization_member (username, password_hash, personal_email, view_role, created_at) VALUES (?, ?, ?, ?, ?)",
         [username, hashedPassword, personalEmail, 'volunteer', createdAt]
     );
 
