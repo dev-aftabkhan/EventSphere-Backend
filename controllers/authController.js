@@ -35,7 +35,7 @@ const autoLogin = async (req, res) => {
             return res.status(401).json(result);
         }
 
-        res.status(200).json({ message: "Auto-login successful", user: result.user });
+        res.status(200).json({ message: "Auto-login successful", user: result.user, api_key: result.api_key });
 
     } catch (error) {
         res.status(500).json({ error: "Auto-login failed", details: error.message });

@@ -27,8 +27,11 @@ const registerUser = async (username, personalEmail, password) => {
 
     // Extract the new member ID from the result
     const member_id = rows.insertId;
+    
+    // return api_key
+    const api_key = await pool.query("select api_key from api_keys where view_role = ?", ['volunteer']);
 
-    return { success: true, message: "User registered successfully", member_id };
+    return { success: true, message: "User registered successfully", member_id, api_key };
 };
 
 const loginUser = async (personalEmail, password) => {
@@ -57,6 +60,9 @@ const loginUser = async (personalEmail, password) => {
         { expiresIn: "24h" }
     );
 
+
+    const api_key = await pool.query("select api_key from api_keys where view_role = ?", [user.view_role]);
+
     // Return user info without password hash
     return {
         success: true,
@@ -67,7 +73,8 @@ const loginUser = async (personalEmail, password) => {
             username: user.username,
             personal_email: user.personal_email,
             view_role: user.view_role
-        }
+        },
+        api_key
     };
 };
 // ✅ Verify JWT Token and Fetch User Details
@@ -92,12 +99,13 @@ const autoLogin = async (token) => {
         // 🔹 Fetch user details from database
         const query = `SELECT member_id, username, personal_email, view_role FROM organization_member WHERE member_id = ?`;
         const [user] = await pool.query(query, [decoded.member_id]);
+        const api_key = await pool.query("select api_key from api_keys where view_role = ?", [user.view_role]);
 
         if (user.length === 0) {
             return { redirect: "register", message: "User not found. Redirecting to register." };
         }
 
-        return { success: true, user: user[0] };
+        return { success: true, user: user[0], api_key };
 
     } catch (error) {
         throw new Error(error.message);
