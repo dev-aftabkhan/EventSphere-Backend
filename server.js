@@ -14,7 +14,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors()); // Restrict origins in production
+app.use(cors({ origin: process.env.CLIENT_URL || "*" })); // Restrict origins in production
 app.use(express.json({ limit: "24mb" })); // Limit request body size
 app.use(express.urlencoded({ extended: true, limit: "24mb" })); // Parse URL-encoded data
 
