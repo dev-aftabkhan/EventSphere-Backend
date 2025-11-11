@@ -16,15 +16,17 @@ const registerUser = async (username, personalEmail, password) => {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+    const createdAt = new Date();
+
 
     // Execute the stored procedure
     const [rows] = await pool.query(
-        "CALL sp_create_account(?, ?, ?, ?);",
-        [username, hashedPassword, personalEmail, null]
+        "INSERT INTO organization_member (username, password, personal_email, role, created_at) VALUES (?, ?, ?, ?, ?)",
+        [username, hashedPassword, personalEmail, 'volunteer', createdAt]
     );
 
     // Extract the new member ID from the result
-    const member_id = rows[0][0].member_oid;
+    const member_id = rows.insertId;
 
     return { success: true, message: "User registered successfully", member_id };
 };
