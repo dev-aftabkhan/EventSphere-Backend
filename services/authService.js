@@ -19,7 +19,7 @@ const registerUser = async (username, personalEmail, password) => {
 
     // Execute the stored procedure
     const [rows] = await pool.query(
-        "CALL CreateUser(?, ?, ?, ?);", 
+        "CALL sp_create_account(?, ?, ?, ?);",
         [username, hashedPassword, personalEmail, null]
     );
 
